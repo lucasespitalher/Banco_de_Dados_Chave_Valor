@@ -34,4 +34,4 @@ CLEAR/DELETE
 
 OTHERS
  - Database.get_all_keys() --> Retorna uma lista contendo as chaves de todos os registros do banco de dados
- - Database.increment_or_decrement([(chave, operação, valor), (chave, operação, valor),...]) --> Permite incrementar ou decrementar um valor numérico em N valores de registros que sejam dos tipos (int) e/ou (float)
+ - Database.increment_or_decrement([(chave, operação, valor), (chave, operação, valor),...]) --> Permite incrementar ou decrementar um valor numérico em N registros que contém valor do tipo (int) ou (float)
