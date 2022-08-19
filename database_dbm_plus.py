@@ -25,50 +25,51 @@ class Database():
             db.close()
 
     #@staticmethod
-    def __get_register__(self, key:str):
+    def __get_key_value__(self, key:str, value:bool):
         if type(key) != str:
             print(f'Key Error --> Chave "{key}" Inválida.')
 
         else:
             db = dbm.open('database')
             my_str = db[key.casefold()].decode('utf-8')
-            if str(self.__char_clear__) in my_str:
-                return (key, None)
-
-            elif self.__id_str__ in my_str:
-                my_str = my_str.replace(self.__id_str__, '')
-                my_value = str(my_str)
-
-            elif self.__id_int__ in my_str:
-                my_str = my_str.replace(self.__id_int__, '')
-                my_value = int(my_str)
-
-            elif self.__id_float__ in my_str:
-                my_str = my_str.replace(self.__id_float__, '')
-                my_value = float(my_str)
-
-            elif self.__id_bool__ in my_str:
-                if 'False' in my_str: return (key, False)
-                else: return (key, True)
-
-            my_tuple = (key, my_value)
             db.close()
-            return my_tuple
 
-    #@staticmethod
-    def __get_value__(self, key:str):
-        if type(key) != str:
-            print(f'Key Error --> Chave "{key}" Inválida.')
-            return False
-
-        else:    
             try:
-                value = self.__get_register__(key)
-                return value[1]
+                if str(self.__char_clear__) in my_str:
+                    if value == True:
+                        return None
+                    return key, None
+
+                elif self.__id_str__ in my_str:
+                    my_str = my_str.replace(self.__id_str__, '')
+                    my_value = str(my_str)
+
+                elif self.__id_int__ in my_str:
+                    my_str = my_str.replace(self.__id_int__, '')
+                    my_value = int(my_str)
+
+                elif self.__id_float__ in my_str:
+                    my_str = my_str.replace(self.__id_float__, '')
+                    my_value = float(my_str)
+
+                elif self.__id_bool__ in my_str:
+                    if 'False' in my_str: 
+                        if value == True:
+                            return False
+                        return key, False
+                    
+                    else: 
+                        if value == True:
+                            return True
+                        return key, True
 
             except:
                 print(f'Key Error --> O Registro com a Chave "{key}" Não Foi Encontrado.')
                 return False
+            
+        if value == True:
+            return my_value
+        return key, my_value
 
     @staticmethod
     def __delete_register__(key:str):
@@ -111,7 +112,7 @@ class Database():
         try:
             db = dbm.open('database', 'w')
             key = key.casefold()
-            register_db = self.__get_value__(key)
+            register_db = self.__get_key_value__(key, value=True)
             if operation == '+':
                 if type(register_db) == int:
                     my_value = register_db + value
@@ -230,7 +231,7 @@ class Database():
         Returns:
             tuple: Retorna uma tupla com o registro"""
 
-        return self.__get_register__(key)
+        return self.__get_key_value__(key, value=False)
 
     def get_multiples_registers(self, keys_list:list):
         """Permite pegar a chave e o valor de multiplos registros no banco de dados
@@ -270,7 +271,7 @@ class Database():
             bool: Retorna o valor do registro como bool
             None: Retorna o valor do registro vazio como None"""
             
-        return self.__get_value__(key)
+        return self.__get_key_value__(key, value=True)
 
     def get_multiples_values(self, keys_list:list):
         """Permite pegar multiplos valores de registros no banco de dados
@@ -284,7 +285,7 @@ class Database():
 
         list_values = []
         for key in keys_list:
-            list_values.append(self.__get_value__(key))
+            list_values.append(self.__get_key_value__(key, value=True))
         
         return tuple(list_values)
 
@@ -379,7 +380,7 @@ class Database():
 if __name__ == '__main__':
     db = Database()
     
-# --> INSERT/UPDATE
+    # --> INSERT/UPDATE
     #print(db.insert_one_register(('int', 100))) # --> OK
     #print(db.insert_one_register(('str', 'string'))) # --> OK
     #print(db.insert_one_register(('float', 7.9))) # --> OK
