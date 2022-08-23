@@ -1,84 +1,119 @@
-# Registro --> {'chave': valor}
-# Chave --> (srt): chave de um registro
-# Valor --> (str|int|float|bool|None): valor correspondente a uma chave de um registro
-
 import dbm
 from types import NoneType
 
-class Database():
 
-    @staticmethod
-    def __connect_database__():
-        db = dbm.open('database', 'c')
-        db.close()
-        return True
+class StructMethods():
+    """Estrutura de métodos utilizados para realizar operações dbm."""
+    
+    _id_str_ = 'nfBVP56JfEku55vxlQCIEg'
+    _id_int_ = 'jvdbo4hxytylU1bXU2QJgg'
+    _id_float_ = 'OYLV--hO0xwGvLwgqxGCuw'
+    _id_bool_ = '-dFtK_D7jR2C2kfgszpqBA'
+    _id_none_ = 'ZcNGDhTYEbLh7SpDJXl85w'
 
-    @staticmethod
-    def __insert_register__(key, value, __id_type__):
-        if type(key) != str:
-            print(f'Key Error --> Chave "{key}" Inválida.')
-        
-        else:
-            db = dbm.open('database', 'w')
-            save = str(__id_type__ + str(value))
-            db[key.casefold()] = save
+    def __init__(self, file_name = 'database') -> None:
+        self._file_name_ = file_name
+        self._connect_database_()
+
+    def _connect_database_(self):
+            db = dbm.open(self._file_name_, 'c')
             db.close()
+            return True
 
-    #@staticmethod
-    def __get_key_value__(self, key:str, value:bool):
-        if type(key) != str:
-            print(f'Key Error --> Chave "{key}" Inválida.')
-
-        else:
-            db = dbm.open('database')
-            my_str = db[key.casefold()].decode('utf-8')
-            db.close()
-
-            try:
-                if str(self.__char_clear__) in my_str:
-                    if value == True:
-                        return None
-                    return key, None
-
-                elif self.__id_str__ in my_str:
-                    my_str = my_str.replace(self.__id_str__, '')
-                    my_value = str(my_str)
-
-                elif self.__id_int__ in my_str:
-                    my_str = my_str.replace(self.__id_int__, '')
-                    my_value = int(my_str)
-
-                elif self.__id_float__ in my_str:
-                    my_str = my_str.replace(self.__id_float__, '')
-                    my_value = float(my_str)
-
-                elif self.__id_bool__ in my_str:
-                    if 'False' in my_str: 
-                        if value == True:
-                            return False
-                        return key, False
-                    
-                    else: 
-                        if value == True:
-                            return True
-                        return key, True
-
-            except:
-                print(f'Key Error --> O Registro com a Chave "{key}" Não Foi Encontrado.')
+    def _insert_register_(self, key, value=None):
+            if type(key) != str:
+                print(f'Key Error --> Chave "{key}" Inválida.')
                 return False
-            
-        if value == True:
-            return my_value
-        return key, my_value
 
-    @staticmethod
-    def __delete_register__(key:str):
+            db = dbm.open(self._file_name_, 'w')
+            if type(value) == NoneType:
+                save = str(StructMethods._id_none_ + str(value))
+                db[key.casefold()] = save
+                db.close()
+                return True
+
+            elif type(value) == int:
+                save = str(StructMethods._id_int_ + str(value))
+                db[key.casefold()] = save
+                db.close()
+                return True
+
+            elif type(value) == float:
+                save = str(StructMethods._id_float_ + str(value))
+                db[key.casefold()] = save
+                db.close()
+                return True
+            
+            elif type(value) == str:
+                save = str(StructMethods._id_str_ + str(value))
+                db[key.casefold()] = save
+                db.close()
+                return True
+
+            elif type(value) == bool:
+                save = str(StructMethods._id_bool_ + str(value))
+                db[key.casefold()] = save
+                db.close()
+                return True
+
+            else:
+                print(f'Value Error --> Valor "{value}" Inválido.')
+                db.close()
+                return False
+
+    def _get_key_value_(self, key:str, value:bool):
+            if type(key) != str:
+                print(f'Key Error --> Chave "{key}" Inválida.')
+
+            else:
+                db = dbm.open(self._file_name_)
+                my_str = db[key.casefold()].decode('utf-8')
+                db.close()
+
+                try:
+                    if StructMethods._id_none_ in my_str:
+                        if value == True:
+                            return None
+                        return key, None
+
+                    elif StructMethods._id_str_ in my_str:
+                        my_str = my_str.replace(StructMethods._id_str_, '')
+                        my_value = str(my_str)
+
+                    elif StructMethods._id_int_ in my_str:
+                        my_str = my_str.replace(StructMethods._id_int_, '')
+                        my_value = int(my_str)
+
+                    elif StructMethods._id_float_ in my_str:
+                        my_str = my_str.replace(StructMethods._id_float_, '')
+                        my_value = float(my_str)
+
+                    elif StructMethods._id_bool_ in my_str:
+                        if 'False' in my_str: 
+                            if value == True:
+                                return False
+                            return key, False
+                        
+                        else: 
+                            if value == True:
+                                return True
+                            return key, True
+
+                except:
+                    print(f'Key Error --> O Registro com a Chave "{key}" Não Foi Encontrado.')
+                    return False
+                
+            if value == True:
+                return my_value
+            return key, my_value
+
+    def _delete_register_(self, key:str):
         if type(key) != str:
             print(f'Key Error --> Chave "{key}" Inválida.')
             return False
         
         try:
-            db = dbm.open('database', 'w')
+            db = dbm.open(self._file_name_, 'w')
             del db[key]
             db.close()
             return True
@@ -87,20 +122,14 @@ class Database():
             print(f'Key Error --> O Registro com a Chave "{key}" Não Foi Encontrado.')
             return False
 
-    @staticmethod
-    def __get_keys__():
-        db = dbm.open('database', 'r')
+    def _get_keys_(self):
+        db = dbm.open(self._file_name_, 'r')
         keys_list = db.keys()
         db.close()
 
-        my_keys = []
-        for key in keys_list:
-            my_keys.append(key.decode('utf-8'))
+        return [key.decode('utf-8') for key in keys_list]
 
-        return my_keys
-
-    #@staticmethod
-    def __increment_decrement__(self, key:str, operation:str, value:int|float):    
+    def _increment_decrement_(self, key:str, operation:str, value:int|float):    
         if type(key) != str:
             print(f'Key Error --> Chave "{key}" Inválida.')
             return False
@@ -110,32 +139,32 @@ class Database():
             return False
 
         try:
-            db = dbm.open('database', 'w')
+            db = dbm.open(self._file_name_, 'w')
             key = key.casefold()
-            register_db = self.__get_key_value__(key, value=True)
+            register_db = self._get_key_value_(key, value=True)
             if operation == '+':
                 if type(register_db) == int:
                     my_value = register_db + value
-                    self.__insert_register__(key, my_value, self.__id_int__)
+                    self._insert_register_(key, my_value)
                     db.close()
                     return True
 
                 elif type(register_db) == float:
                     my_value = register_db + value
-                    self.__insert_register__(key, my_value, self.__id_float__)
+                    self._insert_register_(key, my_value)
                     db.close()
                     return True
 
             elif operation == '-':
                 if type(register_db) == int:
                     my_value = register_db - value
-                    self.__insert_register__(key, my_value, self.__id_int__)
+                    self._insert_register_(key, my_value)
                     db.close()
                     return True
 
                 elif type(register_db) == float:
                     my_value = register_db - value
-                    self.__insert_register__(key, my_value, self.__id_float__)
+                    self._insert_register_(key, my_value)
                     db.close()
                     return True
 
@@ -161,15 +190,13 @@ class Database():
                 return False
 
 
-    def __init__(self):
-        self.__connect_database__()
-        self.__id_str__ = 'str_'
-        self.__id_int__ = 'int_'
-        self.__id_float__ = 'float_'
-        self.__id_bool__ = 'bool_'  
-        self.__char_clear__ = None
+class Database(StructMethods):
+    """Objeto utilizado para executar operação dbm."""
+    
+    def __init__(self, file_name = 'database') -> None:
+        super().__init__(file_name)
 
-    def insert_one_register(self, register:tuple): 
+    def insert_one_register(self, key:str, value:str|int|float|bool|NoneType=None): 
         """Permite criar um registro no banco de dados
 
         Parameters:
@@ -180,31 +207,8 @@ class Database():
             True: Registro realizado com sucesso
             False: Falha ao tentar realizar o registro"""
 
-        key, value = register
-
-        if type(value) == NoneType:
-            self.__insert_register__(key, value, str(self.__char_clear__))
-            return True
-
-        elif type(value) == int:
-            self.__insert_register__(key, value, self.__id_int__)
-            return True
-
-        elif type(value) == float:
-            self.__insert_register__(key, value, self.__id_float__)
-            return True
-        
-        elif type(value) == str:
-            self.__insert_register__(key, value, self.__id_str__)
-            return True
-
-        elif type(value) == bool:
-            self.__insert_register__(key, value, self.__id_bool__)
-            return True
-
-        else:
-            print(f'Value Error --> Valor "{value}" Inválido.')
-            return False
+        super()._insert_register_(key, value)
+        return True
 
     def insert_multiples_registers(self, registers_list:list):
         """Permite criar multiplos registros no banco de dados
@@ -218,8 +222,14 @@ class Database():
             False: Falha ao tentar realizar algum registro"""
 
         for register in registers_list:
-            key, value = register
-            self.insert_one_register((key, value))
+            try:
+                key, value = register
+                self.insert_one_register(key, value)
+
+            except:
+                key = register
+                self.insert_one_register(key)
+        
         return True
 
     def get_one_register(self, key:str):
@@ -230,8 +240,14 @@ class Database():
 
         Returns:
             tuple: Retorna uma tupla com o registro"""
-
-        return self.__get_key_value__(key, value=False)
+        
+        try: 
+            my_register = super()._get_key_value_(key, value=False)
+            return my_register
+        
+        except:
+            print(f'Key Error --> Chave(s) Inválida(s) ou Inesistente(s).')
+            return False
 
     def get_multiples_registers(self, keys_list:list):
         """Permite pegar a chave e o valor de multiplos registros no banco de dados
@@ -242,12 +258,14 @@ class Database():
 
         Returns:
             dict: Retorna um dicionário com as chaves e os valores dos registros"""
-            
-        list_registers = []
-        for key in keys_list:
-            list_registers.append(self.get_one_register(key))
+        
+        try:
+            var_dict = dict([self.get_one_register(key) for key in keys_list])
+            return var_dict
 
-        return dict(list_registers)
+        except: 
+            print(f'Key Error --> Chave(s) Inválida(s) ou Inesistente(s).')
+            return False
 
     def get_all_registers(self):
         """Pega a chave e o valor de todos os registros no banco de dados
@@ -255,7 +273,7 @@ class Database():
         Returns:
             dict: Retorna um dicionário com as chaves e os valores dos registros"""
 
-        keys_list = self.__get_keys__()
+        keys_list = super()._get_keys_()
         return self.get_multiples_registers(keys_list)
 
     def get_one_value(self, key:str):
@@ -271,7 +289,13 @@ class Database():
             bool: Retorna o valor do registro como bool
             None: Retorna o valor do registro vazio como None"""
             
-        return self.__get_key_value__(key, value=True)
+        try:
+            my_value = super()._get_key_value_(key, value=True)
+            return my_value
+        
+        except: 
+            print(f'Key Error --> Chave(s) Inválida(s) ou Inesistente(s).')
+            return False
 
     def get_multiples_values(self, keys_list:list):
         """Permite pegar multiplos valores de registros no banco de dados
@@ -282,12 +306,14 @@ class Database():
 
         Returns:
             tuple: Retorna uma tupla com os valores dos registros"""
-
-        list_values = []
-        for key in keys_list:
-            list_values.append(self.__get_key_value__(key, value=True))
         
-        return tuple(list_values)
+        try:
+            my_values = tuple([(self._get_key_value_(key, value=True)) for key in keys_list])
+            return my_values
+        
+        except: 
+            print(f'Key Error --> Chave(s) Inválida(s) ou Inesistente(s).')
+            return False
 
     def get_all_values(self):
         """Pega os valores de todos os registros no banco de dados
@@ -295,7 +321,7 @@ class Database():
         Returns:
             tuple: Retorna uma tupla com todos os valores dos registros"""
 
-        keys_list = self.__get_keys__()
+        keys_list = super()._get_keys_()
         return self.get_multiples_values(keys_list)
 
     def get_all_keys(self):
@@ -304,7 +330,7 @@ class Database():
         Returns:
             list: Retorna uma lista com todas as chaves dos registros"""
 
-        return self.__get_keys__()
+        return super()._get_keys_()
 
     def clear_multiples_values(self, keys_list:list):
         """Permite limpar o valor de multiplos registros no banco de dados
@@ -318,7 +344,7 @@ class Database():
             True: Operação realizada com sucesso"""
 
         for key in keys_list:
-            self.__insert_register__(key, self.__char_clear__, self.__id_str__)
+            super()._insert_register_(key)
 
         return True
 
@@ -329,7 +355,7 @@ class Database():
         Returns:
             True: Operação realizada com sucesso"""
 
-        keys_list = self.__get_keys__()
+        keys_list = super()._get_keys_()
         self.clear_multiples_values(keys_list)
         return True
 
@@ -344,8 +370,8 @@ class Database():
             False: Falha ao tentar deletar algum registro"""
 
         for key in keys_list:
-            self.__delete_register__(key)
-        
+            super()._delete_register_(key) 
+
         return True
 
     def delete_all_registers(self):
@@ -354,7 +380,7 @@ class Database():
         Returns:
             True: Operação realizada com sucesso"""
 
-        keys_list = self.__get_keys__()
+        keys_list = super()._get_keys_()
         self.delete_multiples_registers(keys_list)
         return True
 
@@ -373,39 +399,7 @@ class Database():
         
         for register_db in key_op_val:
             key, operation, value = register_db
-            self.__increment_decrement__(key, operation, value)
+            super()._increment_decrement_(key, operation, value)
 
-        return True
 
-if __name__ == '__main__':
-    db = Database()
-    
-    # --> INSERT/UPDATE
-    #print(db.insert_one_register(('int', 100))) # --> OK
-    #print(db.insert_one_register(('str', 'string'))) # --> OK
-    #print(db.insert_one_register(('float', 7.9))) # --> OK
-    #print(db.insert_one_register(('bool', False))) # --> OK
-    #print(db.insert_multiples_registers([('int', 10), ('bool', False), ('float', 3.5), ('str', 'string')])) # --> OK
-
-    # --> READ/GET
-    #print(db.get_all_registers()) # --> OK
-    #print(db.get_all_values()) # --> OK
-    #print(db.get_multiples_registers(['int', 'str', 'bool'])) # --> OK
-    #print(db.get_multiples_values(['int', 'float', 'str'])) # --> OK
-    #print(db.get_one_value('int')) # --> OK
-    #print(db.get_one_value('float')) # --> OK
-    #print(db.get_one_value('bool1')) # --> OK
-    #print(db.get_one_value('str')) # --> OK
-
-    # --> CLEAR/DELETE
-    #print(db.clear_multiples_values(['int', 'str'])) # --> OK
-    #print(db.clear_all_values()) # --> OK
-    #print(db.delete_multiples_registers(['int', 'float', 'bool', 'str'])) # --> OK
-    #print(db.delete_all_registers()) # --> OK
-
-    # --> OTHERS
-    #print(db.get_all_keys()) # --> OK
-    #db.increment_or_decrement([('float', '-', 7.359), ('int', '+', 485)]) # --> OK
-
-    # --> VISUALIZAR DATABASE
-    #print(db.get_all_registers()) # --> OK
+connect = Database()
