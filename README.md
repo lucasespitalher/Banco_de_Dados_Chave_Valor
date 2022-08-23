@@ -15,7 +15,7 @@ Objeto python que oferece métodos para utilizar de maneria prática e eficiente
 
 # Métodos
 INSERT/UPDATE
- - Database.insert_one_register((chave, valor)) --> Permite inserir um registro no banco de dados
+ - Database.insert_one_register(chave, valor) --> Permite inserir um registro no banco de dados
  - Database.insert_multiples_registers([(chave, valor), (chave, valor),...]) --> Permite inserir mutiplos registros no banco de dados
 
 READ/GET
