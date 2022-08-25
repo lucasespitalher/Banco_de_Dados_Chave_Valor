@@ -3,7 +3,7 @@ from types import NoneType
 
 
 class StructMethods():
-    """Estrutura de métodos utilizados para realizar operações dbm."""
+    """Estrutura de métodos utilizados para realizar operações a biblioteca python dbm."""
     
     _id_str_ = 'nfBVP56JfEku55vxlQCIEg'
     _id_int_ = 'jvdbo4hxytylU1bXU2QJgg'
@@ -129,6 +129,52 @@ class StructMethods():
 
         return [key.decode('utf-8') for key in keys_list]
 
+    def _clear_registers_(self, key:str, clear_model:str = 'num_zero'):
+        if type(clear_model) != str:
+            print(f'Parameter Error --> "{clear_model}" Precisa ser do Tipo String.')
+            return False
+        
+        try:
+            if clear_model.casefold() == 'none':
+                self._insert_register_(key)
+                return True
+
+            elif clear_model.casefold() == 'zero':
+                self._insert_register_(key, 0)
+                return True
+
+            elif clear_model.casefold() == 'num_zero':
+                var_test = self._get_key_value_(key, value=True)
+                if type(var_test) == int or type(var_test) == float:
+                    self._insert_register_(key, 0)
+                    return True
+
+                else:
+                    self._insert_register_(key)
+                    return True
+
+            elif clear_model.casefold() == 'one':
+                self._insert_register_(key, 1)
+                return True
+
+            elif clear_model.casefold() == 'num_one':
+                var_test = self._get_key_value_(key, value=True)
+                if type(var_test) == int or type(var_test) == float:
+                    self._insert_register_(key, 1)
+                    return True
+
+                else:
+                    self._insert_register_(key)
+                    return True
+
+            else:
+                self._insert_register_(key, clear_model)
+                return True
+
+        except:
+            print(f'Clear Error --> Ocorreu um Erro com a Realiza o Método Clear.\nRealize uma Consulta no Banco de Dados e Execute o Comando Novamente.')
+            return False
+
     def _increment_decrement_(self, key:str, operation:str, value:int|float):    
         if type(key) != str:
             print(f'Key Error --> Chave "{key}" Inválida.')
@@ -191,7 +237,7 @@ class StructMethods():
 
 
 class Database(StructMethods):
-    """Objeto utilizado para executar operação dbm."""
+    """Objeto utilizado para executar operação com a biblioteca python dbm."""
     
     def __init__(self, file_name = 'database') -> None:
         super().__init__(file_name)
@@ -332,31 +378,53 @@ class Database(StructMethods):
 
         return super()._get_keys_()
 
-    def clear_multiples_values(self, keys_list:list):
+    def clear_multiples_values(self, keys_list:list, clear_model:str = "num_zero"):
         """Permite limpar o valor de multiplos registros no banco de dados
             Ex.: {'nome': 'Maria'} --> {'nome': None}
 
         Parameters:
-            keys (list): lista com as chaves dos registros desejados
+            keys_list (list): lista com as chaves dos registros desejados
                 Ex.: clear_multiples_values(['nome', 'idade'])
 
+            clear_model (str): string que identifica o modelo de operação clear
+                "none" = O valor de todos os registros recebe None | 
+                "zero" = O valor de todos os registros recebe 0 | 
+                "one" = O valor de todos os registros recebe 1 | 
+                "num_zero" = O valor de registros númericos recebe 0 - Os demais registros recebem None | 
+                "num_one" = O valor de registros númericos recebe 1 - Os demais registros recebem None | 
+                "str" = O valor de todos os registros recebe "str"
+
         Returns:
-            True: Operação realizada com sucesso"""
+            True: Operação realizada com sucesso
+            False: Falha ao realizar a operação clear"""
 
         for key in keys_list:
-            super()._insert_register_(key)
+            if super()._clear_registers_(key, clear_model=clear_model) == False:
+                return False
 
         return True
 
-    def clear_all_values(self):
+    def clear_all_values(self, clear_model:str = "num_zero"):
         """Limpa o valor de todos os registros no banco de dados
             Ex.: {'nome': 'Maria'} --> {'nome': None}
 
+        Parameters:
+            clear_model (str): string que identifica o modelo de operação clear
+                "none" = O valor de todos os registros recebe None | 
+                "zero" = O valor de todos os registros recebe 0 | 
+                "one" = O valor de todos os registros recebe 1 | 
+                "num_zero" = O valor de registros númericos recebe 0 - Os demais registros recebem None | 
+                "num_one" = O valor de registros númericos recebe 1 - Os demais registros recebem None | 
+                "str" = O valor de todos os registros recebe "str"
+
         Returns:
-            True: Operação realizada com sucesso"""
+            True: Operação realizada com sucesso
+            False: Falha ao realizar a operação clear"""
 
         keys_list = super()._get_keys_()
-        self.clear_multiples_values(keys_list)
+        if self.clear_multiples_values(keys_list, clear_model=clear_model) == False:
+            return False
+            
         return True
 
     def delete_multiples_registers(self, keys_list:list):
