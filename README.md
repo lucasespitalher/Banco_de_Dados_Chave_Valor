@@ -27,8 +27,8 @@ READ/GET
  - Database.get_all_values() --> Retorna uma tupla contendo o valor de todos os registros do banco de dados
 
 CLEAR/DELETE
- - Database.clear_multiples_values([chave, chave,...]) --> Por padrão, atribui None ao valor de N registros
- - Database.clear_all_values() --> Por padrão, atribui None ao valor de todos os registros do banco de dados
+ - Database.clear_multiples_values([chave, chave,...], clear_model="num_zero") --> Por padrão, atribui 0 ao valor de registros numéricos e None ao valor dos demais registros
+ - Database.clear_all_values(clear_model="num_zero") --> Por padrão, atribui None 0 ao valor de todos os registros numéricos e None ao valor de todos os demais registros
  - Database.delete_multiples_registers([chave, chave,...]) --> Permite remover/deletar N registros
  - Database.delete_all_registers() --> Deleta/Remove todos os registros do banco de dados
 
