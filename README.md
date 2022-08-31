@@ -14,9 +14,13 @@ Objeto python que oferece métodos para utilizar de maneria prática e eficiente
  - O valor de um registro pode assumir os seguintes tipos de dados: valor (str - int - float - bool - None)
 
 # Métodos
-INSERT/UPDATE
- - Database.insert_one_register(chave, valor) --> Permite inserir um registro no banco de dados
- - Database.insert_multiples_registers([(chave, valor), (chave, valor),...]) --> Permite inserir mutiplos registros no banco de dados
+CREATE
+ - Database.create_one_register(chave, valor*) --> Permite criar um registro no banco de dados (o parâmetro valor* é opicional)
+ - Database.create_multiples_registers([(chave, valor), (chave, valor),...]) --> Permite criar múltiplos registros no banco de dados
+
+UPDATE
+ - Database.update_one_register(chave, valor) --> Permite atualizar o valor de um registro no banco de dados
+ - Database.update_multiples_registers([(chave, valor), (chave, valor),...]) --> Permite atualizar o valor de múltiplos registros no banco de dados
 
 READ/GET
  - Database.get_one_register(chave) --> Retorna um dicionário com um registro
@@ -26,12 +30,16 @@ READ/GET
  - Database.get_multiples_values([chave, chave,...]) --> Retorna uma tupla contendo o valor de N registros
  - Database.get_all_values() --> Retorna uma tupla contendo o valor de todos os registros do banco de dados
 
-CLEAR/DELETE
+CLEAR
  - Database.clear_multiples_values([chave, chave,...], clear_model="num_zero") --> Por padrão, atribui 0 ao valor de registros numéricos e None ao valor dos demais registros
- - Database.clear_all_values(clear_model="num_zero") --> Por padrão, atribui None 0 ao valor de todos os registros numéricos e None ao valor de todos os demais registros
- - Database.delete_multiples_registers([chave, chave,...]) --> Permite remover/deletar N registros
- - Database.delete_all_registers() --> Deleta/Remove todos os registros do banco de dados
+ - Database.clear_all_values(clear_model="num_zero") --> Por padrão, atribui 0 ao valor de todos os registros numéricos e None ao valor de todos os demais registros
+ 
+DELETE
+ - Database.delete_multiples_registers([chave, chave,...]) --> Permite deletar múltiplos registros
+ - Database.delete_all_registers() --> Deleta todos os registros do banco de dados
 
 OTHERS
+ - Database.update_csv_file(file_dir, new_database*) --> Cria um banco de dados apartir dos registos chave/valor em um arquivo csv (o padrão de new_database* é True)
+ - Database.export_csv_file(file_name) --> Exporta um arquivo csv com todos os registro do banco de dados
  - Database.get_all_keys() --> Retorna uma lista contendo as chaves de todos os registros do banco de dados
  - Database.increment_or_decrement([(chave, operação, valor), (chave, operação, valor),...]) --> Permite incrementar ou decrementar um valor numérico em N registros que contém valor do tipo (int) ou (float)
