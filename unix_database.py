@@ -1,4 +1,5 @@
 import dbm
+import csv
 from types import NoneType
 
 
@@ -20,12 +21,14 @@ class StructMethods():
             db.close()
             return True
 
-    def _insert_register_(self, key, value=None):
+    def _insert_register_(self, key, value:str|int|float|bool|NoneType = None, update:bool = False):
+        db = dbm.open(self._file_name_, 'w')
+        if db.__contains__(key) == update:
+
             if type(key) != str:
                 print(f'Key Error --> Chave "{key}" Inválida.')
                 return False
 
-            db = dbm.open(self._file_name_, 'w')
             if type(value) == NoneType:
                 save = str(StructMethods._id_none_ + str(value))
                 db[key.casefold()] = save
@@ -61,6 +64,10 @@ class StructMethods():
                 db.close()
                 return False
 
+        else:
+            db.close()
+            return False
+   
     def _get_key_value_(self, key:str, value:bool):
             if type(key) != str:
                 print(f'Key Error --> Chave "{key}" Inválida.')
@@ -136,39 +143,39 @@ class StructMethods():
         
         try:
             if clear_model.casefold() == 'none':
-                self._insert_register_(key)
+                self._insert_register_(key, update = True)
                 return True
 
             elif clear_model.casefold() == 'zero':
-                self._insert_register_(key, 0)
+                self._insert_register_(key, 0, update = True)
                 return True
 
             elif clear_model.casefold() == 'num_zero':
                 var_test = self._get_key_value_(key, value=True)
                 if type(var_test) == int or type(var_test) == float:
-                    self._insert_register_(key, 0)
+                    self._insert_register_(key, 0, update = True)
                     return True
 
                 else:
-                    self._insert_register_(key)
+                    self._insert_register_(key, update = True)
                     return True
 
             elif clear_model.casefold() == 'one':
-                self._insert_register_(key, 1)
+                self._insert_register_(key, 1, update = True)
                 return True
 
             elif clear_model.casefold() == 'num_one':
                 var_test = self._get_key_value_(key, value=True)
                 if type(var_test) == int or type(var_test) == float:
-                    self._insert_register_(key, 1)
+                    self._insert_register_(key, 1, update = True)
                     return True
 
                 else:
-                    self._insert_register_(key)
+                    self._insert_register_(key, update = True)
                     return True
 
             else:
-                self._insert_register_(key, clear_model)
+                self._insert_register_(key, clear_model, update = True)
                 return True
 
         except:
@@ -191,26 +198,26 @@ class StructMethods():
             if operation == '+':
                 if type(register_db) == int:
                     my_value = register_db + value
-                    self._insert_register_(key, my_value)
+                    self._insert_register_(key, my_value, update = True)
                     db.close()
                     return True
 
                 elif type(register_db) == float:
                     my_value = register_db + value
-                    self._insert_register_(key, my_value)
+                    self._insert_register_(key, my_value, update = True)
                     db.close()
                     return True
 
             elif operation == '-':
                 if type(register_db) == int:
                     my_value = register_db - value
-                    self._insert_register_(key, my_value)
+                    self._insert_register_(key, my_value, update = True)
                     db.close()
                     return True
 
                 elif type(register_db) == float:
                     my_value = register_db - value
-                    self._insert_register_(key, my_value)
+                    self._insert_register_(key, my_value, update = True)
                     db.close()
                     return True
 
@@ -242,41 +249,65 @@ class Database(StructMethods):
     def __init__(self, file_name = 'database') -> None:
         super().__init__(file_name)
 
-    def insert_one_register(self, key:str, value:str|int|float|bool|NoneType=None): 
+    def create_one_register(self, key:str, value:str|int|float|bool|NoneType = None):
         """Permite criar um registro no banco de dados
 
         Parameters:
-            key_data (tuple) = tupla com a chave e o dado
-                Ex.: register_one_value(('nome', 'Maria'))
+            key (str) = chave do registro
+            value (str|int|float|bool|NoneType) = valor do registro
+                Ex.: create_one_register('nome', 'Maria')
 
         Returns:
-            True: Registro realizado com sucesso
-            False: Falha ao tentar realizar o registro"""
+            True: Registro criado com sucesso
+            False: Falha ao tentar criar o registro"""
 
-        super()._insert_register_(key, value)
-        return True
+        return super()._insert_register_(key, value)
 
-    def insert_multiples_registers(self, registers_list:list):
+    def create_multiples_registers(self, registers_list:list):
         """Permite criar multiplos registros no banco de dados
 
         Parameters:
             key_data (list) = lista de tuplas onde cada tupla = (chave, dado)
-                Ex.: register_multiples_values([('nome', 'Maria'), ('idade', 20)])
-
-        Returns:
-            True: Registros realizados com sucesso
-            False: Falha ao tentar realizar algum registro"""
+                Ex.: register_multiples_values([('nome', 'Maria'), ('idade', 20)])"""
 
         for register in registers_list:
             try:
                 key, value = register
-                self.insert_one_register(key, value)
+                self.create_one_register(key, value)
 
             except:
                 key = register
-                self.insert_one_register(key)
-        
-        return True
+                self.create_one_register(key)
+
+    def update_one_register(self, key:str, value:str|int|float|bool|NoneType = None): 
+        """Permite atualizar o valor de um registro no banco de dados
+
+        Parameters:
+            key (str) = chave do registro
+            value (str|int|float|bool|NoneType) = valor do registro
+                Ex.: update_one_register('nome', 'Maria')
+
+        Returns:
+            True: Registro atualizado com sucesso
+            False: Falha ao tentar atualizar o registro"""
+
+        return super()._insert_register_(key, value, update = True)
+
+    def update_multiples_registers(self, registers_list:list):
+        """Permite atualizar os valores de multiplos registros no banco de dados
+
+        Parameters:
+            key_data (list) = lista de tuplas onde cada tupla = (chave, dado)
+                Ex.: register_multiples_values([('nome', 'Maria'), ('idade', 20)])"""
+
+        for register in registers_list:
+            try:
+                key, value = register
+                self.update_one_register(key, value)
+
+            except:
+                key = register
+                self.update_one_register(key)
 
     def get_one_register(self, key:str):
         """Permite pegar o um registro no banco de dados
@@ -288,7 +319,7 @@ class Database(StructMethods):
             tuple: Retorna uma tupla com o registro"""
         
         try: 
-            my_register = super()._get_key_value_(key, value=False)
+            my_register = super()._get_key_value_(key, value = False)
             return my_register
         
         except:
@@ -336,7 +367,7 @@ class Database(StructMethods):
             None: Retorna o valor do registro vazio como None"""
             
         try:
-            my_value = super()._get_key_value_(key, value=True)
+            my_value = super()._get_key_value_(key, value = True)
             return my_value
         
         except: 
@@ -354,7 +385,7 @@ class Database(StructMethods):
             tuple: Retorna uma tupla com os valores dos registros"""
         
         try:
-            my_values = tuple([(self._get_key_value_(key, value=True)) for key in keys_list])
+            my_values = tuple([(self._get_key_value_(key, value = True)) for key in keys_list])
             return my_values
         
         except: 
@@ -468,6 +499,74 @@ class Database(StructMethods):
         for register_db in key_op_val:
             key, operation, value = register_db
             super()._increment_decrement_(key, operation, value)
+
+    def upload_csv_file(self, file_dir:str, new_database:bool = True):
+        """Permite criar N registros a partir de um arquivo csv onde cada registro tem o formato chave,valor
+
+        Parameters:
+            file_dir (str): nome do arquivo csv com os registros
+            new_database (bool): True --> Cria o banco de dados apenas com os registros do arquivo csv | False --> Insere no banco de dados apenas os registros do arquivo csv que ainda não existem
+
+        Returns:
+            True: Registros inseridos no banco de dados com sucesso
+            False: Falha ao tentar inserir algum registro"""
+
+        register_list = []
+        try:
+            with open(file_dir, 'r') as csvfile:
+                if new_database == True:
+                    self.delete_all_registers()
+
+                reader = csv.reader(csvfile)
+
+                for registro in reader:
+                    if len(registro) == 2:
+                        if "true" in registro[-1].casefold():
+                            register_list.append((registro[0], True))
+
+                        elif "false" in registro[-1].casefold():
+                            register_list.append((registro[0], False))
+
+                        elif "none" in registro[-1].casefold():
+                            register_list.append((registro[0], None))
+                        
+                        else:
+                            try: register_list.append((registro[0], int(registro[-1])))
+                            except:
+                                try: register_list.append((registro[0], float(registro[-1])))
+                                except: register_list.append((registro[0], registro[-1]))
+                    
+                    else: continue
+
+            self.create_multiples_registers(register_list)
+            return True
+        
+        except: 
+            print("Upload Error --> Verifique o Arquivo CSV e Tente Novamente.")
+            return False
+        
+    def export_csv_file(self, file_name:str = 'database'):
+        """Cria um arquivo csv com todos os registros do banco de dados ccom o formato chave,valor
+
+        Parameters:
+            file_name (str): nome para o arquivo csv
+            
+        Returns:
+            True: Arquivo criado/exportado com sucesso
+            False: Falha ao tentar criar/exportar o arquivo"""
+
+        register_dict = self.get_all_registers()
+        try:
+            with open(file_name + '.csv', 'w') as csvfile:
+                csv.writer(csvfile, delimiter=',')
+                for key in register_dict:
+                    csv.writer(csvfile, delimiter=',').writerow([key, str(register_dict[key])])
+
+            return True
+        
+        except:
+            print("Export Error --> Verifique o Nome do Arquivo CSV e Tente Novamente.")
+            return False
 
 
 connect = Database()
