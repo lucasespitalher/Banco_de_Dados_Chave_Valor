@@ -1,7 +1,7 @@
 # EM ATUALIZAÇÃO!!!
 - Novos métodos foram adicionados e o código fonte está sendo refatorado.
 - A vesão atual está operando normalmente mas em breve receberá atualizações.
-- No momento, já é possível desfrutar de recursos como criptografia simétrica e registros estruturados (README em Atualização).
+- No momento, já é possível desfrutar de recursos como criptografia simétrica e registros estruturados - (README em Atualização).
 
 # Banco de Dados Chave/Valor com dbm
 Objeto python que oferece métodos para utilizar de maneria prática e eficiente um Banco de Dados com estrutura Chave/Valor criado a partir da biblioteca dbm nativa do python.
