@@ -1,10 +1,15 @@
+# EM ATUALIZAÇÃO!!!
+- Novos métodos foram adicionados e o código fonte está sendo refatorado.
+- A vesão atual está operando normalmente mas em breve receberá atualizações.
+- No momento, já é possível desfrutar de recursos como criptografia simétrica e registros estruturados (README em Atualização).
+
 # Banco de Dados Chave/Valor com dbm
-Objeto python que oferece métodos para utilizar de maneria prática e eficiente um Banco de Dados com estrutura Chave/Valor criado a paritr da biblioteca dbm nativa do python.
+Objeto python que oferece métodos para utilizar de maneria prática e eficiente um Banco de Dados com estrutura Chave/Valor criado a partir da biblioteca dbm nativa do python.
 
 # Funcionamento
- - Basta criar uma instância do objeto e executar o código para criar um banco de dados chamado 'database'.
+ - Basta criar uma instância do objeto 'Database' ou importar 'connect' de 'unix_database' e executar o código para criar um banco de dados.
  - Não é necessário iniciar e encerrar a conexão com o banco de dados para inserir registros. Os métodos da instância estabelecem a conexão de forma autônoma. Para inserir, ler, pegar, limpar ou apagar registros do banco de dados utilize os métodos da instância.
- - Nativamente, a biblioteca dbm permite registrar apenas strings convertendo-as para bytes e vice-versa. Porém, o objeto criado nesse projeto, trata os registros permitindo ao usuário inserir dados dos tipos str/int/float/bool/None de modo que ao executar um método 'GET' para pegar um ou mais registros estes retornam no mesmo formado que foram inserido. Cada dado ao ser inserido no banco de dados é convertido em string concatenada com outra string de identificação de tipo de dado. Essa string de identificação é utilizada pela instância para tratar os registros e identificar o tipo correto de cada dado registrado. Quando um método 'GET' é utilizado, a instância identifica o tipo de dado pela string de identificação e então essa string é removida e o dado é convertido ao tipo de dado original.
+ - Nativamente, a biblioteca dbm permite registrar apenas strings convertendo-as para bytes e vice-versa. Porém, o objeto criado nesse projeto, trata os registros permitindo ao usuário inserir dados dos tipos str/int/float/bool/None de modo que ao executar um método 'GET' para pegar um ou mais registros estes retornam no mesmo formado que foram inserido. De maneira específica, cada dado ao ser inserido no banco de dados é convertido em string concatenada com outra string que identifica o tipo de dado. Essa string de identificação é utilizada pela instância para tratar os registros e identificar o tipo correto de cada dado registrado. Quando um método 'GET' é utilizado, a instância identifica o tipo de dado pela string de identificação e então essa string é removida e o dado é convertido ao tipo de dado original.
 
 # Estrututra
  - O Banco de Dados Chave/Valor funciona como um dicionário python.
